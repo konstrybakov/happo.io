@@ -17,9 +17,15 @@ let sha;
 
 beforeEach(() => {
   makeRequest.mockImplementation((req) => {
-    if (/\/assets\//.test(req.url)) {
+    if (/\/assets\//.test(req.url) && req.method === 'POST') {
       // uploading assets
       return Promise.resolve({ path: req.formData.payload.value });
+    }
+    if (/\/assets-data\//.test(req.url) && req.method === 'GET') {
+      // checking if assets exist
+      const e = new Error();
+      e.statusCode = 404;
+      throw e;
     }
     return Promise.resolve({});
   });
